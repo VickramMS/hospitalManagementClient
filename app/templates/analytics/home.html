@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="p-3">
+        <h5>Analytics - {{profile}}</h5>
+        <hr class="bg-secondary">
+        <div class="p-2">
+            <div id="temperatureChart"></div>
+        </div>
+        <div class="p-2">
+            <div id="hbpmChart"></div>
+        </div>
+        <div class="p-2">
+            <div id="spo2Chart"></div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    $.ajax({
+        url: '/api/analytics/{{profile.id}}',
+        success: function (resp) {
+            var timeStamp = resp.timeStamp
+            var hbpm = resp.hbpm
+            var temp = resp.temp
+            var spo2 = resp.spo2
+
+            console.log(timeStamp)
+
+            var options = {
+                series: [{
+                    name: "Temperature",
+                    data: temp
+                }],
+
+                colors: ['#c00600'],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight',
+                },
+                title: {
+                    text: 'Temperature',
+                    align: 'left'
+                },
+                xaxis: {
+                    categories: timeStamp,
+                    type: 'datetime',
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#temperatureChart"), options);
+            chart.render();
+
+            var options = {
+                series: [{
+                    name: "Heart Beat per Minute",
+                    data: hbpm
+                }],
+
+                colors: ['#f19419'],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight',
+                },
+                title: {
+                    text: 'BPM',
+                    align: 'left'
+                },
+                xaxis: {
+                    categories: timeStamp,
+                    type: 'datetime',
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#hbpmChart"), options);
+            chart.render();
+
+            var options = {
+                series: [{
+                    name: "Oxygen Saturation in %",
+                    data: spo2
+                }],
+
+                colors: ['#2fa816'],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'straight',
+                },
+                title: {
+                    text: 'Saturation %',
+                    align: 'left'
+                },
+                xaxis: {
+                    categories: timeStamp,
+                    type: 'datetime',
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#spo2Chart"), options);
+            chart.render();
+        }
+    })
+</script>
+{% endblock scripts %}
