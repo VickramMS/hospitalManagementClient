@@ -22,5 +22,10 @@ class NewPatient(View):
         return render(request, 'home/addpatient.html')
 
     def post(sefl, request):
+        profile = Profile()
+        profile.patientName = request.POST.get('name')
+        profile.age = request.POST.get('age')
+        profile.contactNumber = request.POST.get('contact')
+        profile.save()
         messages.info(request, 'New patient record has been added')
         return HttpResponseRedirect('/')
