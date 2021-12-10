@@ -9,5 +9,6 @@ urlpatterns = [
 
     #api
 
-    path('api/analytics/<id>', api.AnalyticsAPI.as_view())
+    path('api/analytics/<id>', api.AnalyticsAPI.as_view()),
+    path('api/update', api.UpdateDataAPI.as_view())
 ]

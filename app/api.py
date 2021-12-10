@@ -24,3 +24,21 @@ class AnalyticsAPI(APIView):
             "spo2" : spo2,
             "temp" : temp
         }, safe=False)
+
+class UpdateDataAPI(APIView):
+    def post(self, request):
+        try:
+            profile = Profile.objects.get(patientName=request.POST.get('username'))
+            record = Record()
+            record.profile = profile
+            record.temperature = request.POST.get('temp')
+            record.spo2 = request.POST.get('spo2')
+            record.hbpm = request.POST.get('hb')
+            record.save()
+            return JsonResponse({
+                "response" : "Data added"
+            })
+        except:
+            return JsonResponse({
+                "response" : "There was an unexpected error!"
+            })
